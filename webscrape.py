@@ -25,7 +25,7 @@ def UpdateTeams(year):
 
     for team_data in data[1:]:
         df = pd.concat([df, pd.DataFrame(team_data[1:], columns=headers)], ignore_index=True)
-    
+        
     print("Teams statistics updated for " + str(year-1) + "-" + str(year)[-2:] + "!")
     return(df)
 
