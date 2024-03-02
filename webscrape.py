@@ -25,12 +25,12 @@ def UpdateTeams(year):
 
     for team_data in data[1:]:
         df = pd.concat([df, pd.DataFrame(team_data[1:], columns=headers)], ignore_index=True)
-        
+
     print("Teams statistics updated for " + str(year-1) + "-" + str(year)[-2:] + "!")
     return(df)
 
-def UpdatePlayers():
-    url = "https://universitysport.prestosports.com/sports/mvball/2023-24/players?sort=&view=&pos=p&r=0"
+def UpdatePlayers(year):
+    url = "https://universitysport.prestosports.com/sports/mvball/" + str(year-1) + "-" + str(year)[-2:] + "/players?sort=&view=&pos=p&r=0"
     stats = requests.get(url)
     statsdoc = BeautifulSoup(stats.text, 'html.parser')
 
