@@ -1,8 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import UnexpectedAlertPresentException, NoAlertPresentException
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -28,19 +24,36 @@ def UpdatePlayers(year):
 
     tables = statsdoc.find_all('table')
 
+    # atk_data = []
+    # for table in tables:
+    #     rows = table.find_all('tr')
+    #     header_data = []
+    #     for row in rows:
+    #         cols = row.find_all(['td', 'th'])
+    #         processed_cols = []
+    #         for i, col in enumerate(cols):
+    #             text = col.text.strip()
+    #             if i == 1:  # Apply replace operations only on the first column
+    #                 text = text.replace('  ', '').replace('\n', ' ').replace('\r', '')
+    #             processed_cols.append(text)
+    #         header_data.append(processed_cols)
+    #     atk_data.append(header_data)
     atk_data = []
     for table in tables:
         rows = table.find_all('tr')
-        team_data = []
+        header_data = []
         for row in rows:
             cols = row.find_all(['td', 'th'])
             cols = [col.text.strip() for col in cols]
-            team_data.append(cols)
-        atk_data.append(team_data)
+            header_data.append(cols)
+        atk_data.append(header_data)
+
 
     headers = atk_data[0][0]
     atk_df = pd.DataFrame(atk_data[0][1:], columns=headers)
     atk_df = atk_df.drop(columns = atk_df.columns[:1])
+
+    atk_df.iloc[:, 0] = atk_df.iloc[:, 0].str.replace('  ', '').str.replace('\n', ' ').str.replace('\r', '').str.strip()
 
     print(atk_df)
     print("Player statistics updated for " + str(year-1) + "-" + str(year)[-2:] + "!")
@@ -48,6 +61,8 @@ def UpdatePlayers(year):
 
     print(df)
 
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_colwidth', None)
 UpdatePlayers(2024)
 
 # def UpdateTeams(year):
